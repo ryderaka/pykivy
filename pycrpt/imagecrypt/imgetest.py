@@ -2,11 +2,15 @@
 
 from PIL import Image
 from Crypto.Cipher import AES
+import binascii
+import hashlib
 
 # import random
 
 
 def encryption(password):
+    password = hashlib.sha256(password.encode('utf-8')).digest()
+    print(password)
     plaintext = []
     plaintextstr = ""
 
@@ -30,24 +34,32 @@ def encryption(password):
     plaintext = str(''.join(str(x) for x in list(map(lambda x:x+202, plaintext))))
 
     # print(plaintext)
+    print(len(plaintext))   # image length equals to width * height
 
-    plaintext+="w"+width+"w"+"h"+height+"h"
 
-    while (len(plaintextstr) % 16 != 0):
-        plaintextstr = plaintextstr + "z"
+    plaintext+="w"+str(width)+"w"+"h"+str(height)+"h"
+    print(len(plaintext))
+    while (len(plaintext) % 16 != 0):
+        plaintext = plaintext + "z"
+    print(len(plaintext))
 
     obj = AES.new(password, AES.MODE_CBC, 'This is an IV456')
-    ciphertext = obj.encrypt(plaintextstr)
+    ciphertext = obj.encrypt(plaintext)
 
+    print(len(ciphertext))
+    print(ciphertext)
+    print()
+    print()
     cipher_name = "cryptoimg.crypt"
     g = open(cipher_name, 'w')
-    g.write(ciphertext)
+    g.write(str(ciphertext))
+
+    asciicipher = binascii.hexlify(ciphertext)
+    print(ascii(asciicipher))
+
+encryption('akashakashakasha')
 
 
-
-
-
-    print(len(plaintext))   # image length equals to width * height
 
     # for i in range(0, len(plaintext)):
     #     for j in range(0, 3):
