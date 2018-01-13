@@ -47,17 +47,46 @@ def encryption(password):
     ciphertext = obj.encrypt(plaintext)
 
     print(len(ciphertext))
-    print(ciphertext)
-    print()
-    print()
+    # print(ciphertext)
+    # print()
+    # print()
     cipher_name = "cryptoimg.crypt"
     g = open(cipher_name, 'w')
     g.write(str(ciphertext))
 
-    asciicipher = binascii.hexlify(ciphertext)
-    print(ascii(asciicipher))
+    # asciicipher = binascii.hexlify(ciphertext)
+    # print(ascii(asciicipher))
 
-encryption('akashakashakasha')
+
+def decryption(password):
+    # with open("cryptoimg.crypt", "r") as crypt_file:
+    crypt_file = open("cryptoimg.crypt", 'r')
+    crypt_file = crypt_file.read()
+
+    # print(crypt_file[1:])
+    # print(len(crypt_file) % 16)
+
+    password = hashlib.sha256(password.encode('utf-8')).digest()
+
+    obj = AES.new(password, AES.MODE_CBC, 'This is an IV456')
+    # print(len(crypt_file))
+    ciphertext = obj.decrypt(crypt_file.replace('\'', ''))
+    print(ciphertext)
+    ciphertext = ciphertext.replace('n', '')
+    width = ciphertext.split('w')[1]
+    height = ciphertext.split('h')[1]
+    widthstr = "w" + str(width) + "w"
+    heightstr = "h" + str(height) + "h"
+    decrypted = ciphertext.replace(heightstr, "")
+    decrypted = decrypted.replace(widthstr, "")
+    print(decrypted)
+        # finaltextone = [decrypted[i:i + 3] for i in range(0, len(decrypted), 3)]
+        # print(finaltextone)
+
+
+
+# encryption('akash')
+decryption('akash')
 
 
 
