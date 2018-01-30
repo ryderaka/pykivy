@@ -4,6 +4,7 @@ from PIL import Image
 from Crypto.Cipher import AES
 import binascii
 import hashlib
+import time
 
 # import random
 
@@ -52,8 +53,8 @@ def encryption(password):
     # print()
     # print()
     cipher_name = "cryptoimg.crypt"
-    g = open(cipher_name, 'wb')
-    g.write((ciphertext))
+    with open(cipher_name, 'wb') as g:
+        g.write((ciphertext))
 
     # asciicipher = binascii.hexlify(ciphertext)
     # print(ascii(asciicipher))
@@ -63,7 +64,8 @@ def decryption(password):
     with open("cryptoimg.crypt", "rb") as crypt_file:
         # crypt_file = open("cryptoimg.crypt", 'rb')
         crypt_file = crypt_file.read()
-
+        # crypt_file = crypt_file.decode('utf-8')
+        # print(crypt_file)
         # print(crypt_file[:])
         # print(len(crypt_file) % 16)
 
@@ -71,8 +73,14 @@ def decryption(password):
 
         obj = AES.new(password, AES.MODE_CBC, 'This is an IV456')
         # print(len(crypt_file))
-        ciphertext = str(obj.decrypt(crypt_file))
+        # ciphertext = str(obj.decrypt(crypt_file))
+        ciphertext = (obj.decrypt(crypt_file))
+        ciphertext = ciphertext.decode('utf-8')
+        print('..')
+
         # print(ciphertext)
+        print('.....')
+        print(type(ciphertext))
         ciphertext = ciphertext.replace('z', '')
         width = ciphertext.split('w')[1]
         height = ciphertext.split('h')[1]
@@ -80,9 +88,38 @@ def decryption(password):
         heightstr = "h" + str(height) + "h"
         decrypted = ciphertext.replace(heightstr, "")
         decrypted = decrypted.replace(widthstr, "")
-        decrypted = ','.join([decrypted[i:i+3] for i in range(-1, len(decrypted), 3)])
+        # decrypted = str(decrypted, 'utf-8')
+        # decrypted = decrypted.decode('utf-8')
+        print(type(decrypted))
+        # print(decrypted)
+        print('processing...')
+        t = time.time()
+        zz = [int(decrypted[i:i+3]) for i in range(0, len(decrypted), 3)]
+        print(time.time() - t)
 
-        print(decrypted)
+        t2 = time.time()
+        finaltexttwo = [((zz[(i)]) - 202, (zz[(i + 1)]) - 202, (zz[(i + 2)]) - 202)
+            for i in range(0, len(zz), 3)]
+        print(time.time() - t2)
+
+        # t1 = time.time()
+        # zz = tuple(tuple(zz)[i:i + 3] for i in range(0, len(zz), 3))
+        # print(time.time() - t1)
+
+        print(finaltexttwo)
+        newim = Image.new("RGB", (int(width), int(height)))
+        newim.putdata(finaltexttwo)
+        newim.show()
+
+        newim.save('temp.jpg')
+
+        # t = time.time()
+
+        # decrypted = int(''.join(list(map(lambda num:str(int(num)-202), ",".join([decrypted[i:i+3] for i in range(0, len(decrypted), 3)]).split(',')))))
+        # decrypted = ','.join([decrypted[i:i+3] for i in range(-1, len(decrypted), 3)])
+
+        # print(decrypted)
+        # print('done at: ', time.time() - t)
 
 
         # finaltextone = [decrypted[i:i + 3] for i in range(0, len(decrypted), 3)]
