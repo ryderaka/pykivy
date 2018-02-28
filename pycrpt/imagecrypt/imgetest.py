@@ -30,7 +30,7 @@ def encryption(password):
 
     for y in range(0, height):
         for x in range(0, width):
-            plaintext.extend(list(arr[x,y]))
+            plaintext.extend(list(arr[x, y]))
             # plaintext.append(arr[x, y]) # append horizontal rgb tuples
     plaintext = str(''.join(str(x) for x in list(map(lambda x:x+202, plaintext))))
 
@@ -98,8 +98,7 @@ def decryption(password):
         print(time.time() - t)
 
         t2 = time.time()
-        finaltexttwo = [((zz[(i)]) - 202, (zz[(i + 1)]) - 202, (zz[(i + 2)]) - 202)
-            for i in range(0, len(zz), 3)]
+        finaltexttwo = [((zz[(i)]) - 202, (zz[(i + 1)]) - 202, (zz[(i + 2)]) - 202) for i in range(0, len(zz), 3)]
         print(time.time() - t2)
 
         # t1 = time.time()

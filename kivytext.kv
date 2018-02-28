@@ -1,0 +1,35 @@
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+
+<RootScreen>:
+    transition: FadeTransition()
+    MainScreen:
+    ImageScreen:
+
+<MainScreen>:
+    name: "start"
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'test_image.jpg'
+
+    FloatLayout:
+        Button:
+            text: "Play!"
+            size_hint: 0.4, 0.3
+            pos_hint: {'center_x':.5, 'center_y':.5}
+            font_size: 70
+            on_release: root.manager.current = "image"
+            Image:
+                source: 'test_image.jpg'
+
+
+<ImageScreen>:
+    name: "image"
+    FloatLayout:
+        Button:
+            text: "Image!"
+            size_hint: 0.4, 0.3
+            pos_hint: {'center_x':.5, 'center_y':.5}
+            font_size: 70
+            on_release: root.manager.current  = "start"
